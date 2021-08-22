@@ -122,7 +122,13 @@ int highest_layer_index(layer_state_t layer_state_copy) {
 
 void render_layer_state(void) {
     char unknown_layer_name[16] = {};
-    oled_write_ln_P(PSTR("Layer"), false);
+    oled_write("Layer", false);
+    // show which of the first 10 layers are active
+    for (int8_t i=8; i>=0; i-=2) {
+      uint8_t layer_bits = (layer_state >> i) & 3;
+      oled_write_char(FONT_LAYER_INDICATORS + layer_bits, false);
+    }
+    // give the name for the highest layer
     switch (highest_layer_index(layer_state)) {
         case L_ALPHA:
             oled_write_ln_P(PSTR("A"), false);
@@ -140,9 +146,8 @@ void render_layer_state(void) {
             snprintf(
                 unknown_layer_name,
                 sizeof(unknown_layer_name),
-                "? (%2d) (%3lu)",
-                highest_layer_index(layer_state),
-                layer_state
+                "?? %2d",
+                highest_layer_index(layer_state)
             );
             oled_write_ln(unknown_layer_name, false);
             break;
