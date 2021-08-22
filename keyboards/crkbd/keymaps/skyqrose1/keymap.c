@@ -68,6 +68,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Portrait orientation
 oled_rotation_t oled_init_user(oled_rotation_t rotation) { return OLED_ROTATION_270; }
 
+// Custom Fonts
+#define FONT_BLANK 0x00
+
+#define FONT_MOD_SHIFT 0x85
+#define FONT_MOD_CTRL 0x86
+#define FONT_MOD_ALT 0x87
+#define FONT_MOD_GUI_COMMAND 0x88
+#define FONT_MOD_GUI_WINDOWS 0x89
+#define FONT_MOD_GUI_APPLE 0x8a
+#define FONT_MOD_GUI_GNOME 0x8b
+#define FONT_MOD_GUI_TUX 0x8c
+
+#define FONT_LOCK 0xc5
+#define FONT_LAYER_INDICATORS 0xc6 // through 0xc9
+#define FONT_SWAP_ARROWS 0x8d
+
 void render_space(void) {
     oled_write_P(PSTR("     "), false);
 }
@@ -81,6 +97,23 @@ void render_logo(void) {
     oled_write_P(PSTR("corne"), false);
 }
 
+void render_alerts(void) {
+  led_t host_led_state = host_keyboard_led_state();
+  if(host_led_state.caps_lock) {
+    oled_write_P(PSTR("CAPS"), false);
+    oled_write_char(FONT_LOCK, false);
+  }
+  else if(keymap_config.swap_lctl_lgui) {
+    oled_write_char(FONT_MOD_GUI_APPLE, false);
+    oled_write_char(FONT_BLANK, false);
+    oled_write_char(FONT_MOD_CTRL, false);
+    oled_write_char(FONT_SWAP_ARROWS, false);
+    oled_write_char(FONT_MOD_GUI_COMMAND, false);
+  } else {
+    render_space();
+  }
+}
+
 int highest_layer_index(layer_state_t layer_state_copy) {
   int result = 0;
   while (layer_state_copy >>= 1) result++;
@@ -89,7 +122,7 @@ int highest_layer_index(layer_state_t layer_state_copy) {
 
 void render_layer_state(void) {
     char unknown_layer_name[16] = {};
-    oled_write_P(PSTR("Layer: "), false);
+    oled_write_ln_P(PSTR("Layer"), false);
     switch (highest_layer_index(layer_state)) {
         case L_ALPHA:
             oled_write_ln_P(PSTR("A"), false);
@@ -135,24 +168,15 @@ void set_keylog(uint16_t keycode, keyrecord_t *record) {
   }
 
   // update keylog
-  snprintf(keylog_str, sizeof(keylog_str), "%dx%d, k%2d : %c",
+  snprintf(keylog_str, sizeof(keylog_str), "%1dx%1d %ck%4x",
            record->event.key.row, record->event.key.col,
-           keycode, name);
+           name, keycode);
 }
 
 void render_keylog(void) {
     oled_write_ln(keylog_str, false);
 }
 
-#define FONT_BLANK 0x00
-#define FONT_MOD_SHIFT 0x85
-#define FONT_MOD_CTRL 0x86
-#define FONT_MOD_ALT 0x87
-#define FONT_MOD_GUI_COMMAND 0x88
-#define FONT_MOD_GUI_WINDOWS 0x89
-#define FONT_MOD_GUI_APPLE 0x8a
-#define FONT_MOD_GUI_GNOME 0x8b
-#define FONT_MOD_GUI_TUX 0x8C
 void render_mods(void) {
   uint8_t modifiers = get_mods()|get_oneshot_mods();
   oled_write_char(
@@ -181,17 +205,21 @@ void render_mods(void) {
 void oled_task_user(void) {
     if (is_keyboard_master()) {
         render_logo();
-        render_space();
-        render_mods();
+        render_alerts();
         render_space();
         render_layer_state();
-        render_space();
+        oled_set_cursor(0, 13);
         render_keylog();
+        oled_set_cursor(0, 15);
+        render_mods();
     } else {
         render_logo();
     }
 }
 
+// called on every keypress
+// return true to continue normal processing
+// return false to stop processing
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
     set_keylog(keycode, record);
