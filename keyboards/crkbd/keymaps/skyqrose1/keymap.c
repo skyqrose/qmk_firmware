@@ -72,26 +72,37 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
   return rotation;
 }
 
+int highest_layer_index(layer_state_t layer_state_copy) {
+  int result = 0;
+  while (layer_state_copy >>= 1) result++;
+  return result;
+}
+
 void oled_render_layer_state(void) {
+    char unknown_layer_name[16] = {};
     oled_write_P(PSTR("Layer: "), false);
-    switch (layer_state) {
-        case (1<<L_ALPHA):
+    switch (highest_layer_index(layer_state)) {
+        case L_ALPHA:
             oled_write_ln_P(PSTR("A"), false);
             break;
-        case (1<<L_NUMPUNC|1<<L_ALPHA):
+        case L_NUMPUNC:
             oled_write_ln_P(PSTR("#"), false);
             break;
-        case (1<<L_NAV|1<<L_ALPHA):
-        case (1<<L_NAV|1<<L_NUMPUNC|1<<L_ALPHA):
+        case L_NAV:
             oled_write_ln_P(PSTR("Nav"), false);
             break;
-        case (1<<L_SYSTEM|1<<L_ALPHA):
-        case (1<<L_SYSTEM|1<<L_NAV|1<<L_ALPHA):
-        case (1<<L_SYSTEM|1<<L_NAV|1<<L_NUMPUNC|1<<L_ALPHA):
+        case L_SYSTEM:
             oled_write_ln_P(PSTR("Sys"), false);
             break;
         default:
-            oled_write_ln_P(PSTR("?"), false);
+            snprintf(
+                unknown_layer_name,
+                sizeof(unknown_layer_name),
+                "? (%2d) (%3lu)",
+                highest_layer_index(layer_state),
+                layer_state
+            );
+            oled_write_ln(unknown_layer_name, false);
             break;
     }
 }
