@@ -126,9 +126,8 @@ void render_layer_state(void) {
     }
 }
 
-char keylog_str[24] = {};
-
-const char code_to_name[60] = {
+char keycode_to_char(uint16_t keycode) {
+  const char code_to_name[60] = {
     ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f',
     'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
     'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -136,13 +135,48 @@ const char code_to_name[60] = {
     'R', 'E', 'B', 'T', '_', '-', '=', '[', ']', '\\',
     '#', ';', '\'', '`', ',', '.', '/', ' ', ' ', ' '};
 
-void set_keylog(uint16_t keycode, keyrecord_t *record) {
-  char name = ' ';
-    if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) ||
-        (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) { keycode = keycode & 0xFF; }
-  if (keycode < 60) {
-    name = code_to_name[keycode];
+  if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) || (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) {
+    keycode = keycode & 0xFF;
   }
+  if (keycode < 60) {
+    return code_to_name[keycode];
+  } else {
+    return ' ';
+  }
+}
+
+void render_position_hint(keypos_t key) {
+  uint8_t layer = layer_switch_get_layer(key);
+  uint16_t keycode = keymap_key_to_keycode(layer, key);
+  char name = keycode_to_char(keycode);
+  oled_write_char(name, false);
+}
+
+void render_layer_hint(void) {
+  uint8_t row;
+  uint8_t col;
+  keypos_t key;
+  if (is_keyboard_master()) {
+    for (row=0; row < 4; row++) {
+      for (col=1; col < 6; col++) {
+        key = (keypos_t) { .row = row, .col = col };
+        render_position_hint(key);
+      }
+    }
+  } else {
+    for (row=4; row < 8; row++) {
+      for (col=5; col > 0; col--) {
+        key = (keypos_t) { .row = row, .col = col };
+        render_position_hint(key);
+      }
+    }
+  }
+}
+
+char keylog_str[24] = {};
+
+void set_keylog(uint16_t keycode, keyrecord_t *record) {
+  char name = keycode_to_char(keycode);
 
   // update keylog
   snprintf(keylog_str, sizeof(keylog_str), "%1dx%1d %ck%4x",
@@ -164,18 +198,28 @@ void render_mods(void) {
 }
 
 void oled_task_user(void) {
-    if (is_keyboard_master()) {
-        render_logo();
-        render_alerts();
-        render_space();
-        render_layer_state();
-        oled_set_cursor(0, 13);
-        render_keylog();
-        oled_set_cursor(0, 15);
-        render_mods();
-    } else {
-        render_logo();
-    }
+  // 16 rows, 5 cols
+  if (is_keyboard_master()) {
+    render_logo(); // 0-3
+    render_alerts(); // 4
+    render_space(); // 5
+    render_layer_state();  // 6-8
+    render_layer_hint(); // 9-12
+    oled_set_cursor(0, 13);
+    render_keylog(); // 13-14
+    oled_set_cursor(0, 15);
+    render_mods(); // 15
+  } else {
+    render_logo(); // 0-3
+    render_alerts(); // 4
+    render_space(); // 5
+    render_layer_state();  // 6-8
+    render_layer_hint(); // 9-12
+    oled_set_cursor(0, 13);
+    render_keylog(); // 13-14
+    oled_set_cursor(0, 15);
+    render_mods(); // 15
+  }
 }
 
 // called on every keypress
