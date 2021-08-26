@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TAPPING_TOGGLE 1
 #define PERMISSIVE_HOLD
 
-#define OLED_FONT_H "keyboards/crkbd/keymaps/skyqrose1/glcdfont.c"
+#define OLED_FONT_H "keyboards/crkbd/keymaps/skyqrose/glcdfont.c"
 
 #define USB_POLLING_INTERVAL_MS 2
 #define QMK_KEYS_PER_SCAN 6

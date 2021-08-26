@@ -1,8 +1,6 @@
 #include "progmem.h"
 
-// Corne 8x6 font with QMK Firmware Logo
 // Online editor: https://helixfonteditor.netlify.com/
-// See also: https://github.com/soundmonster/glcdfont_converter
 
 const unsigned char font[] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 0x00
