@@ -40,8 +40,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 oled_rotation_t oled_init_user(oled_rotation_t rotation) { return OLED_ROTATION_270; }
 
 // Custom Fonts
-#define FONT_BLANK 0x00
-
 #define FONT_MOD_SHIFT 0x85
 #define FONT_MOD_CTRL 0x86
 #define FONT_MOD_ALT 0x87
@@ -76,7 +74,7 @@ void render_alerts(void) {
   }
   else if(keymap_config.swap_lctl_lgui) {
     oled_write_char(FONT_MOD_GUI_APPLE, false);
-    oled_write_char(FONT_BLANK, false);
+    oled_write_char(' ', false);
     oled_write_char(FONT_MOD_CTRL, false);
     oled_write_char(FONT_SWAP_ARROWS, false);
     oled_write_char(FONT_MOD_GUI_COMMAND, false);
@@ -158,27 +156,11 @@ void render_keylog(void) {
 
 void render_mods(void) {
   uint8_t modifiers = get_mods()|get_oneshot_mods();
-  oled_write_char(
-      (modifiers & MOD_MASK_SHIFT)
-      ? FONT_MOD_SHIFT
-      : FONT_BLANK
-  , false);
-  oled_write_char(
-      (modifiers & MOD_MASK_CTRL)
-      ? FONT_MOD_CTRL
-      : FONT_BLANK
-  , false);
-  oled_write_char(
-      (modifiers & MOD_MASK_ALT)
-      ? FONT_MOD_ALT
-      : FONT_BLANK
-  , false);
-  oled_write_char(
-      (modifiers & MOD_MASK_GUI)
-      ? FONT_MOD_GUI_TUX
-      : FONT_BLANK
-  , false);
-  oled_write_char(FONT_BLANK, false);
+  oled_write_char((modifiers & MOD_MASK_SHIFT) ? FONT_MOD_SHIFT : ' ', false);
+  oled_write_char((modifiers & MOD_MASK_CTRL) ? FONT_MOD_CTRL : ' ', false);
+  oled_write_char((modifiers & MOD_MASK_ALT) ? FONT_MOD_ALT : ' ', false);
+  oled_write_char((modifiers & MOD_MASK_GUI) ? FONT_MOD_GUI_TUX : ' ', false);
+  oled_write_char(' ', false);
 }
 
 void oled_task_user(void) {
