@@ -41,5 +41,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define OLED_FONT_H "keyboards/crkbd/keymaps/skyqrose/glcdfont.c"
 
+#define COMBO_COUNT 8
+#define COMBO_TERM 75
+
+#define FORCE_NKRO
 #define USB_POLLING_INTERVAL_MS 2
 #define QMK_KEYS_PER_SCAN 6

@@ -19,8 +19,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include QMK_KEYBOARD_H
 #include <stdio.h>
 
+#ifdef COMBO_ENABLE
+enum combos {
+  C_LBRC,
+  C_LPRN,
+  C_LCBR,
+  C_RBRC,
+  C_RPRN,
+  C_RCBR,
+  C_ENT,
+  C_ESC,
+};
+const uint16_t PROGMEM combo_lbrc[] = {KC_E, KC_U, COMBO_END};
+const uint16_t PROGMEM combo_lprn[] = {KC_D, KC_J, COMBO_END};
+const uint16_t PROGMEM combo_lcbr[] = {KC_C, KC_M, COMBO_END};
+const uint16_t PROGMEM combo_rbrc[] = {KC_R, KC_I, COMBO_END};
+const uint16_t PROGMEM combo_rprn[] = {KC_F, KC_K, COMBO_END};
+const uint16_t PROGMEM combo_rcbr[] = {KC_V, KC_COMM, COMBO_END};
+const uint16_t PROGMEM combo_ent[] = {KC_F, KC_MINS, COMBO_END};
+const uint16_t PROGMEM combo_esc[] = {KC_E, KC_I, COMBO_END};
+combo_t key_combos[COMBO_COUNT] = {
+  [C_LBRC] = COMBO(combo_lbrc, KC_LBRC),
+  [C_LPRN] = COMBO(combo_lprn, KC_LPRN),
+  [C_LCBR] = COMBO(combo_lcbr, KC_LCBR),
+  [C_RBRC] = COMBO(combo_rbrc, KC_RBRC),
+  [C_RPRN] = COMBO(combo_rprn, KC_RPRN),
+  [C_RCBR] = COMBO(combo_rcbr, KC_RCBR),
+  [C_ENT] = COMBO(combo_ent, KC_ENT),
+  [C_ESC] = COMBO(combo_esc, KC_ESC),
+};
+#endif // COMBO_ENABLE
+
 enum layers {
-  L_ALPHA,
+  L_BASE,
   L_NUMPUNC,
   L_NAV,
   L_SYSTEM,
@@ -28,27 +59,27 @@ enum layers {
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [L_ALPHA] = LAYOUT_split_3x6_3(
+  [L_BASE] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
+    KC_GRV,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_NO,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,             KC_H,    KC_J,    KC_K,    KC_L,    KC_MINS, KC_ENT,
+    KC_NO, LSFT_T(KC_A), LCTL_T(KC_S), LGUI_T(KC_D), KC_F, KC_G,   KC_H, KC_J, RGUI_T(KC_K), RCTL_T(KC_L), RSFT_T(KC_MINS), KC_QUOT,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_DEL,
+    KC_LALT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RALT,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               TT(2),   KC_LGUI, KC_LCTL,          KC_SPC,  TT(1),   KC_RALT
+                               KC_TAB,  TT(1),   KC_BSPC,          KC_SPC,  TT(2),   KC_ENT
 //                            +--------+--------+--------+        +--------+--------+--------+
   ),
 
   [L_NUMPUNC] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_TRNS, KC_LT,   KC_GT,   KC_LCBR, KC_RCBR, KC_CALC,          KC_PPLS, KC_7,    KC_8,    KC_9,    KC_0,    KC_TRNS,
+    KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,          KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TRNS,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_TRNS, KC_LBRC, KC_RBRC, KC_LPRN, KC_RPRN, KC_QUOT,          KC_MINS, KC_4,    KC_5,    KC_6,    KC_PAST, KC_TRNS,
+    KC_CALC, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_GRV,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_TRNS, KC_GRV,  KC_BSLS, KC_EQL,  KC_SCLN, KC_COMM,          KC_DOT,  KC_1,    KC_2,    KC_3,    KC_SLSH, KC_TRNS,
+    KC_TRNS, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_EQL,           KC_PPLS, KC_SCLN, KC_COMM, KC_DOT,  KC_SLSH, KC_TRNS,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               KC_TRNS, KC_TRNS, KC_TRNS,          KC_TRNS, TO(0),   KC_TRNS
+                               KC_TRNS, KC_TRNS, KC_TRNS,          KC_TRNS, KC_TRNS, KC_TRNS
 //                            +--------+--------+--------+        +--------+--------+--------+
   ),
 
@@ -60,7 +91,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     KC_TRNS, KC_PSCR, KC_MAIL, KC_F14,  KC_F15,  KC_F16,           KC_NO,   KC_BTN1, KC_BTN3, KC_BTN2, KC_NO,   KC_TRNS,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               TO(0),   KC_TRNS, KC_TRNS,          KC_TRNS, KC_TRNS, KC_TRNS
+                               KC_TRNS, KC_TRNS, KC_TRNS,          KC_TRNS, KC_TRNS, KC_TRNS
 //                            +--------+--------+--------+        +--------+--------+--------+
   ),
 
@@ -152,7 +183,7 @@ void render_layer_state(void) {
     }
     // give the name for the highest layer
     switch (highest_layer_index(layer_state)) {
-        case L_ALPHA:
+        case L_BASE:
             oled_write_ln_P(PSTR("A"), false);
             break;
         case L_NUMPUNC:
