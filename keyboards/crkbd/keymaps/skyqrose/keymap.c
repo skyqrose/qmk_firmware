@@ -28,17 +28,19 @@ enum combos {
   C_RPRN,
   C_RCBR,
   C_ENT,
+  C_TAB,
   C_ESC,
 };
 const uint16_t PROGMEM combo_lbrc[] = {KC_E, KC_U, COMBO_END};
-const uint16_t PROGMEM combo_lprn[] = {KC_D, KC_J, COMBO_END};
+const uint16_t PROGMEM combo_lprn[] = {LGUI_T(KC_D), KC_J, COMBO_END};
 const uint16_t PROGMEM combo_lcbr[] = {KC_C, KC_M, COMBO_END};
 const uint16_t PROGMEM combo_rbrc[] = {KC_R, KC_I, COMBO_END};
-const uint16_t PROGMEM combo_rprn[] = {KC_F, KC_K, COMBO_END};
+const uint16_t PROGMEM combo_rprn[] = {KC_F, RGUI_T(KC_K), COMBO_END};
 const uint16_t PROGMEM combo_rcbr[] = {KC_V, KC_COMM, COMBO_END};
-const uint16_t PROGMEM combo_ent[] = {KC_F, KC_MINS, COMBO_END};
+const uint16_t PROGMEM combo_ent[] = {KC_F, RSFT_T(KC_MINS), COMBO_END};
+const uint16_t PROGMEM combo_tab[] = {LSFT(KC_A), KC_J, COMBO_END};
 const uint16_t PROGMEM combo_esc[] = {KC_E, KC_I, COMBO_END};
-combo_t key_combos[COMBO_COUNT] = {
+combo_t key_combos[] = {
   [C_LBRC] = COMBO(combo_lbrc, KC_LBRC),
   [C_LPRN] = COMBO(combo_lprn, KC_LPRN),
   [C_LCBR] = COMBO(combo_lcbr, KC_LCBR),
@@ -46,8 +48,18 @@ combo_t key_combos[COMBO_COUNT] = {
   [C_RPRN] = COMBO(combo_rprn, KC_RPRN),
   [C_RCBR] = COMBO(combo_rcbr, KC_RCBR),
   [C_ENT] = COMBO(combo_ent, KC_ENT),
+  [C_TAB] = COMBO(combo_tab, KC_TAB),
   [C_ESC] = COMBO(combo_esc, KC_ESC),
 };
+
+// instead of setting COMBO_COUNT in config.h, calculate it at compile time
+uint16_t COMBO_LEN = sizeof(key_combos) / sizeof(key_combos[0]);
+
+#define COMBO_ONLY_FROM_LAYER L_BASE
+
+// prevents holding combos, because I have shared mod+combo keys
+// also requires COMBO_MUST_TAP_PER_COMBO
+bool get_combo_must_tap(uint16_t index, combo_t *combo) { return true; }
 #endif // COMBO_ENABLE
 
 enum layers {

@@ -20,8 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-/* Select hand configuration */
-
+// Hand configuration
 #define MASTER_LEFT
 // #define MASTER_RIGHT
 // #define EE_HANDS
@@ -36,13 +35,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define TAPPING_FORCE_HOLD
 #define TAPPING_TERM 100
-#define TAPPING_TOGGLE 1
+#define TAPPING_TOGGLE 2
 #define PERMISSIVE_HOLD
 
 #define OLED_FONT_H "keyboards/crkbd/keymaps/skyqrose/glcdfont.c"
 
-#define COMBO_COUNT 8
-#define COMBO_TERM 75
+// Combos
+// #define COMBO_ENABLE // set by rules.mk
+// #define COMBO_COUNT 0 // counted at compile time by COMBO_LEN instead
+#define COMBO_TERM 50
+// My combos are all length 2, I'll never need more than length 6
+#define EXTRA_SHORT_COMBOS
+// I have combos that use mod keys. Tap for a combo, hold for a mod.
+// along with definition of get_combo_must_tap
+#define COMBO_MUST_TAP_PER_COMBO
 
 #define FORCE_NKRO
 #define USB_POLLING_INTERVAL_MS 2
