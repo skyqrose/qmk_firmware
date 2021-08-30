@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPLIT_MODS_ENABLE
 
 #define TAPPING_FORCE_HOLD
-#define TAPPING_TERM 100
+#define TAPPING_TERM 140
 #define TAPPING_TOGGLE 2
 #define PERMISSIVE_HOLD
 
@@ -43,7 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // Combos
 // #define COMBO_ENABLE // set by rules.mk
 // #define COMBO_COUNT 0 // counted at compile time by COMBO_LEN instead
-#define COMBO_TERM 50
+#define COMBO_TERM 60
 // My combos are all length 2, I'll never need more than length 6
 #define EXTRA_SHORT_COMBOS
 // I have combos that use mod keys. Tap for a combo, hold for a mod.

@@ -72,69 +72,72 @@ const key_override_t **key_overrides = (const key_override_t *[]){
 
 enum layers {
   L_BASE,
-  L_NUMPUNC,
+  L_PUNC,
   L_NAV,
-  L_SYSTEM,
+  L_SYS,
   L_GAME,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [L_BASE] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_GRV,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_NO,
+    KC_GRV,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_ENT,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_NO, LSFT_T(KC_A), LCTL_T(KC_S), LGUI_T(KC_D), KC_F, KC_G,   KC_H, KC_J, RGUI_T(KC_K), RCTL_T(KC_L), RSFT_T(KC_MINS), KC_QUOT,
+    KC_ESC, LSFT_T(KC_A), LCTL_T(KC_S), LGUI_T(KC_D), KC_F, KC_G,
+                                                       KC_H, KC_J, RGUI_T(KC_K), RCTL_T(KC_L), RSFT_T(KC_MINS), KC_QUOT,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     KC_LALT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RALT,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               KC_TAB,  TT(1),   KC_BSPC,          KC_SPC,  TT(2),   KC_ENT
+                               KC_TAB, TT(L_NAV), KC_BSPC,         KC_SPC, TT(L_PUNC), TO(L_BASE)
 //                            +--------+--------+--------+        +--------+--------+--------+
   ),
 
-  [L_NUMPUNC] = LAYOUT_split_3x6_3(
+  [L_PUNC] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,          KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TRNS,
+    _______, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,          KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_CALC, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_GRV,
+    _______, LSFT_T(KC_1), LCTL_T(KC_2), LGUI_T(KC_3), KC_4, KC_5,
+                                                          KC_6, KC_7, RGUI_T(KC_8), RCTL_T(KC_9), RSFT_T(KC_0), _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_TRNS, KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_EQL,           KC_PPLS, KC_SCLN, KC_COMM, KC_DOT,  KC_SLSH, KC_TRNS,
+    _______, KC_CALC, XXXXXXX, KC_SCLN, KC_COLN, KC_EQL,           KC_PPLS, XXXXXXX, KC_COMM, KC_DOT,  KC_SLSH, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               KC_TRNS, KC_TRNS, KC_TRNS,          KC_TRNS, KC_TRNS, KC_TRNS
+                               _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
   ),
 
   [L_NAV] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_TRNS, TO(3),   KC_MPRV, KC_MPLY, KC_MNXT, KC_BRIU,          KC_NO,   KC_HOME, KC_PGDN, KC_PGUP, KC_END,  KC_TRNS,
+    _______, TO(L_SYS), KC_MPRV, KC_MPLY, KC_MNXT, KC_BRIU,        XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_TRNS, KC_F24,  KC_MUTE, KC_VOLD, KC_VOLU, KC_BRID,          KC_NO,   KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_TRNS,
+    _______, LSFT_T(KC_F24), LCTL_T(KC_MUTE), LGUI_T(KC_VOLD), KC_VOLU, KC_BRID,
+                                                                   XXXXXXX, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_TRNS, KC_PSCR, KC_MAIL, KC_F14,  KC_F15,  KC_F16,           KC_NO,   KC_BTN1, KC_BTN3, KC_BTN2, KC_NO,   KC_TRNS,
+    _______, KC_PSCR, KC_MAIL, KC_F14,  KC_F15,  KC_F16,           XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               KC_TRNS, KC_TRNS, KC_TRNS,          KC_TRNS, KC_TRNS, KC_TRNS
+                               _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
   ),
 
-  [L_SYSTEM] = LAYOUT_split_3x6_3(
+  [L_SYS] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_TRNS, TO(0),   RESET,   KC_NO,   KC_NO,   KC_NO,            KC_PWR,  KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_TRNS,
+    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          KC_PWR,  KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_TRNS, TO(4),   KC_NO,   LCG_NRM, LCG_SWP, KC_NO,            KC_SLEP, KC_F4,   KC_F5,   KC_F6,   KC_F11,  KC_TRNS,
+    _______, TO(L_GAME), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,       KC_SLEP, KC_F4,   KC_F5,   KC_F6,   KC_F11,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_TRNS, KC_CAPS, KC_NO,   KC_NO,   KC_NO,   TO(4),            KC_NO,   KC_F1,   KC_F2,   KC_F3,   KC_F12,  KC_TRNS,
+    _______, KC_CAPS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F12,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               TO(0), KC_TRNS, KC_TRNS,            KC_TRNS, KC_TRNS, KC_TRNS
+                               _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
    ),
   [L_GAME] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_TAB,  KC_1,    KC_Q,    KC_W,    KC_E,    KC_R,             KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
+    KC_TAB,  KC_1,    KC_Q,    KC_W,    KC_E,    KC_R,             XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_ESC,  KC_2,    KC_A,    KC_S,    KC_D,    KC_F,             KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
+    KC_ESC,  KC_2,    KC_A,    KC_S,    KC_D,    KC_F,             XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_LSFT, KC_LSFT, KC_MINS, KC_LBRC, KC_RBRC, TO(0),            KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
+    KC_LSFT, KC_LSFT, KC_MINS, KC_LBRC, KC_RBRC, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               KC_LALT, KC_LCTL, KC_SPC,           KC_NO,   KC_NO,   KC_NO
+                               KC_LALT, KC_LCTL, KC_SPC,           _______, XXXXXXX, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
   )
 };
@@ -206,13 +209,13 @@ void render_layer_state(void) {
         case L_BASE:
             oled_write_ln_P(PSTR("A"), false);
             break;
-        case L_NUMPUNC:
+        case L_PUNC:
             oled_write_ln_P(PSTR("#"), false);
             break;
         case L_NAV:
             oled_write_ln_P(PSTR("Nav"), false);
             break;
-        case L_SYSTEM:
+        case L_SYS:
             oled_write_ln_P(PSTR("Sys"), false);
             break;
         case L_GAME:
