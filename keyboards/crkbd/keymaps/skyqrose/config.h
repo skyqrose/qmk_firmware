@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define TAPPING_FORCE_HOLD
 #define TAPPING_TERM 140
-#define TAPPING_TOGGLE 2
+#define TAPPING_TOGGLE 1
 #define PERMISSIVE_HOLD
 
 #define OLED_FONT_H "keyboards/crkbd/keymaps/skyqrose/glcdfont.c"
