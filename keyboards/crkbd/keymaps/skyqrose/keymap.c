@@ -62,6 +62,14 @@ uint16_t COMBO_LEN = sizeof(key_combos) / sizeof(key_combos[0]);
 bool get_combo_must_tap(uint16_t index, combo_t *combo) { return true; }
 #endif // COMBO_ENABLE
 
+#ifdef KEY_OVERRIDE_ENABLE
+const key_override_t shift_bspc_del = ko_make_basic(MOD_MASK_SHIFT, KC_BSPC, KC_DEL);
+const key_override_t **key_overrides = (const key_override_t *[]){
+  &shift_bspc_del,
+  NULL
+};
+#endif // KEY_OVERRIDE_ENABLE
+
 enum layers {
   L_BASE,
   L_NUMPUNC,
