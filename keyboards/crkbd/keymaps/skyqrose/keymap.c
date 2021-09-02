@@ -77,8 +77,9 @@ enum layers {
   L_SYS,
   L_GAME,
 };
+#define NUM_LAYERS 5
 
-const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
   [L_BASE] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     KC_GRV,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_ENT,
@@ -147,30 +148,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 oled_rotation_t oled_init_user(oled_rotation_t rotation) { return OLED_ROTATION_270; }
 
 // Custom Fonts
-#define FONT_MOD_SHIFT 0x85
-#define FONT_MOD_CTRL 0x86
-#define FONT_MOD_ALT 0x87
-#define FONT_MOD_GUI_COMMAND 0x88
-#define FONT_MOD_GUI_WINDOWS 0x89
-#define FONT_MOD_GUI_APPLE 0x8a
-#define FONT_MOD_GUI_GNOME 0x8b
-#define FONT_MOD_GUI_TUX 0x8c
+#define FONT_MOD_SHIFT 0x94
+#define FONT_MOD_CTRL 0x95
+#define FONT_MOD_ALT 0x96
+#define FONT_MOD_GUI_COMMAND 0x97
+#define FONT_MOD_GUI_WINDOWS 0x98
+#define FONT_MOD_GUI_APPLE 0x99
+#define FONT_MOD_GUI_GNOME 0x9a
+#define FONT_MOD_GUI_TUX 0x9b
+#define FONT_SWAP_ARROWS 0x9c
+#define FONT_LOCK 0x9d
 
-#define FONT_LOCK 0xc5
-#define FONT_LAYER_INDICATORS 0xc6 // through 0xc9
-#define FONT_SWAP_ARROWS 0x8d
+#define FONT_LAYER_INDICATORS 0x85 // through 0x88
 
 void render_space(void) {
     oled_write_P(PSTR("     "), false);
 }
 
 void render_logo(void) {
-    static const char PROGMEM corne_logo[] = {
-        0x80, 0x81, 0x82, 0x83, 0x84,
-        0xa0, 0xa1, 0xa2, 0xa3, 0xa4,
-        0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0};
-    oled_write_P(corne_logo, false);
-    oled_write_P(PSTR("corne"), false);
+  oled_write_P(PSTR("corne"), false);
 }
 
 void render_alerts(void) {
@@ -190,47 +186,53 @@ void render_alerts(void) {
   }
 }
 
-int highest_layer_index(layer_state_t layer_state_copy) {
-  int result = 0;
-  while (layer_state_copy >>= 1) result++;
-  return result;
+// gives the icon for the highest active layer
+void render_layer_icon(void) {
+  const char icons[NUM_LAYERS][3][3] = {
+    [L_BASE] = {
+      {' ', 0x89, 0x8a},
+      {0xa8, 0xa9, 0xaa},
+      {0xc8, 0xc9, 0xca}
+    },
+    [L_PUNC] = {
+      {0x8b, 0x8c, 0x8d},
+      {0xab, 0xac, 0xad},
+      {0xcb, 0xcc, 0xcd}
+    },
+    [L_NAV] = {
+      {0x8e, 0x8f, 0x90},
+      {0xae, 0xaf, 0xb0},
+      {0xce, 0xcf, 0xd0}
+    },
+    [L_SYS] = {
+      {0x91, 0x92, 0x93},
+      {0xb1, 0xb2, 0xb3},
+      {0xd1, 0xd2, 0xd3}
+    },
+    [L_GAME] = {
+      {' ', ' ', ' '},
+      {0xa5, 0xa6, 0xa7},
+      {0xc5, 0xc6, 0xc7}
+    },
+  };
+  const char blank[3][3] = {{' ', ' ', ' '}, {' ', '?', ' '}, {' ', ' ', ' '}};
+  uint8_t layer = get_highest_layer(layer_state);
+  const char (*icon)[3] = (layer < NUM_LAYERS) ? icons[layer] : blank;
+  for (uint8_t i = 0; i < 3; i++) {
+    oled_write_char(' ', false);
+    oled_write_char(icon[i][0], false);
+    oled_write_char(icon[i][1], false);
+    oled_write_char(icon[i][2], false);
+    oled_write_char(' ', false);
+  }
 }
 
-void render_layer_state(void) {
-    char unknown_layer_name[16] = {};
-    oled_write("Layer", false);
-    // show which of the first 10 layers are active
-    for (int8_t i=8; i>=0; i-=2) {
-      uint8_t layer_bits = (layer_state >> i) & 3;
-      oled_write_char(FONT_LAYER_INDICATORS + layer_bits, false);
-    }
-    // give the name for the highest layer
-    switch (highest_layer_index(layer_state)) {
-        case L_BASE:
-            oled_write_ln_P(PSTR("A"), false);
-            break;
-        case L_PUNC:
-            oled_write_ln_P(PSTR("#"), false);
-            break;
-        case L_NAV:
-            oled_write_ln_P(PSTR("Nav"), false);
-            break;
-        case L_SYS:
-            oled_write_ln_P(PSTR("Sys"), false);
-            break;
-        case L_GAME:
-            oled_write_ln_P(PSTR("Game"), false);
-            break;
-        default:
-            snprintf(
-                unknown_layer_name,
-                sizeof(unknown_layer_name),
-                "?? %2d",
-                highest_layer_index(layer_state)
-            );
-            oled_write_ln(unknown_layer_name, false);
-            break;
-    }
+// show which of the first 10 layers are active
+void render_layer_bits(void) {
+  for (int8_t i=8; i>=0; i-=2) {
+    uint8_t layer_bits = (layer_state >> i) & 3;
+    oled_write_char(FONT_LAYER_INDICATORS + layer_bits, false);
+  }
 }
 
 char keycode_to_char(uint16_t keycode) {
@@ -259,7 +261,7 @@ void render_position_hint(keypos_t key) {
   oled_write_char(name, false);
 }
 
-void render_layer_hint(void) {
+void render_layout_hint(void) {
   uint8_t row;
   uint8_t col;
   keypos_t key;
@@ -306,27 +308,18 @@ void render_mods(void) {
 
 void oled_task_user(void) {
   // 16 rows, 5 cols
-  if (is_keyboard_master()) {
-    render_logo(); // 0-3
-    render_alerts(); // 4
-    render_space(); // 5
-    render_layer_state();  // 6-8
-    render_layer_hint(); // 9-12
-    oled_set_cursor(0, 13);
-    render_keylog(); // 13-14
-    oled_set_cursor(0, 15);
+  //if (is_keyboard_master()) {
+    render_logo(); // 0
+    render_space(); // 1
+    render_layer_icon(); // 2-4
+    render_layer_bits();  // 5
+    render_space(); // 6
+    render_layout_hint(); // 7-10
+    render_space(); // 11
+    render_keylog(); // 12-13
+    render_alerts(); // 14
     render_mods(); // 15
-  } else {
-    render_logo(); // 0-3
-    render_alerts(); // 4
-    render_space(); // 5
-    render_layer_state();  // 6-8
-    render_layer_hint(); // 9-12
-    oled_set_cursor(0, 13);
-    render_keylog(); // 13-14
-    oled_set_cursor(0, 15);
-    render_mods(); // 15
-  }
+  //}
 }
 
 // called on every keypress
