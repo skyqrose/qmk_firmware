@@ -149,8 +149,8 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 oled_rotation_t oled_init_user(oled_rotation_t rotation) { return OLED_ROTATION_270; }
 
 // Custom Fonts
-#define FONT_MOD_SHIFT 0x94
-#define FONT_MOD_CTRL 0x95
+#define FONT_MOD_CTRL 0x94
+#define FONT_MOD_SHIFT 0x95
 #define FONT_MOD_ALT 0x96
 #define FONT_MOD_GUI_COMMAND 0x97
 #define FONT_MOD_GUI_WINDOWS 0x98
