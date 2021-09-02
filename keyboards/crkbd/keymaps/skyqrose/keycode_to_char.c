@@ -21,7 +21,7 @@ const char keycode_chars[0x74] = {
   /* 0x46 */ 0xDE, // printscreen
   /* 0x47 */ 0x9D, // scroll lock
   /* 0x48 */ ' ', ' ', 0x11, 0x1e, // pause, insert, home pgup
-  /* 0x4a */ 0xDA, 0x10, 0x0F, 0x1A, // del, end, pgdn, right
+  /* 0x4a */ 0xDA, 0x10, 0x1F, 0x1A, // del, end, pgdn, right
   /* 0x50 */ 0x1B, 0x19, 0x18, 0x9D, // left, down, up, numlock
   /* 0x54 */ '/', '*', '-', '+', // keypad
   /* 0x58 */ 0xD8 /* enter */, '1', '2', '3', '4', '5', '6', '7', // keypad
@@ -117,9 +117,61 @@ char layer_keycodes(uint16_t keycode) {
   }
 }
 
+char shifted_keycodes(uint16_t keycode) {
+  switch (keycode) {
+    case KC_TILD: // LSFT(KC_GRV) ~
+      return '~';
+    case KC_EXLM: // LSFT(KC_1) !
+      return '!';
+    case KC_AT: // LSFT(KC_2) @
+      return '@';
+    case KC_HASH: // LSFT(KC_3) #
+      return '#';
+    case KC_DLR: // LSFT(KC_4) $
+      return '$';
+    case KC_PERC: // LSFT(KC_5) %
+      return '%';
+    case KC_CIRC: // LSFT(KC_6) ^
+      return '^';
+    case KC_AMPR: // LSFT(KC_7) &
+      return '&';
+    case KC_ASTR: // LSFT(KC_8) *
+      return '*';
+    case KC_LPRN: // LSFT(KC_9) (
+      return '(';
+    case KC_RPRN: // LSFT(KC_0) )
+      return ')';
+    case KC_UNDS: // LSFT(KC_MINS) _
+      return '_';
+    case KC_PLUS: // LSFT(KC_EQL) +
+      return '+';
+    case KC_LCBR: // LSFT(KC_LBRC) {
+      return '{';
+    case KC_RCBR: // LSFT(KC_RBRC) }
+      return '}';
+    case KC_LABK: // LSFT(KC_COMM) <
+      return '<';
+    case KC_RABK: // LSFT(KC_DOT) >
+      return '>';
+    case KC_COLN: // LSFT(KC_SCLN) :
+      return ':';
+    case KC_PIPE: // LSFT(KC_BSLS) |
+      return '|';
+    case KC_QUES: // LSFT(KC_SLSH) ?
+      return '?';
+    case KC_DQT: // LSFT(KC_QUOT) "
+      return '"';
+    default:
+      return ' ';
+  }
+}
+
 char keycode_to_char(uint16_t keycode) {
   if ((keycode >= QK_TO && keycode <= QK_TO_MAX) || (keycode >= QK_LAYER_TAP_TOGGLE && keycode <= QK_LAYER_TAP_TOGGLE_MAX)) {
     return layer_keycodes(keycode);
+  }
+  if (keycode >= QK_MODS && keycode <= QK_MODS_MAX) {
+    return shifted_keycodes(keycode);
   }
   bool shift = (get_mods()|get_oneshot_mods()) & MOD_MASK_SHIFT;
   if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) || (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) {

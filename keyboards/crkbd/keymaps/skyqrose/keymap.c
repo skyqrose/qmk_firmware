@@ -101,7 +101,7 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
     _______, LSFT_T(KC_1), LCTL_T(KC_2), LGUI_T(KC_3), KC_4, KC_5,
                                                           KC_6, KC_7, RGUI_T(KC_8), RCTL_T(KC_9), RSFT_T(KC_0), _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, XXXXXXX, KC_CALC, KC_SCLN, KC_COLN, KC_EQL,           KC_PPLS, XXXXXXX, KC_COMM, KC_DOT,  KC_SLSH, _______,
+    _______, XXXXXXX, KC_CALC, KC_SCLN, KC_COLN, KC_EQL,           KC_PLUS, XXXXXXX, KC_COMM, KC_DOT,  KC_SLSH, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
                                _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
@@ -264,19 +264,19 @@ void render_layout_hint(void) {
   }
 }
 
-char keylog_str[24] = {};
+char keylog_str[11] = {};
 
 void set_keylog(uint16_t keycode, keyrecord_t *record) {
   char name = keycode_to_char(keycode);
 
   // update keylog
-  snprintf(keylog_str, sizeof(keylog_str), "%1dx%1d %ck%4x",
-           record->event.key.row, record->event.key.col,
+  snprintf(keylog_str, sizeof(keylog_str), "%1xx%1x %ck%4x",
+           record->event.key.row & 0xF, record->event.key.col & 0xF,
            name, keycode);
 }
 
 void render_keylog(void) {
-    oled_write_ln(keylog_str, false);
+    oled_write(keylog_str, false);
 }
 
 void render_mods(void) {
@@ -290,18 +290,21 @@ void render_mods(void) {
 
 void oled_task_user(void) {
   // 16 rows, 5 cols
-  //if (is_keyboard_master()) {
-    render_logo(); // 0
-    render_space(); // 1
-    render_layer_icon(); // 2-4
-    render_layer_bits();  // 5
-    render_space(); // 6
-    render_layout_hint(); // 7-10
-    render_space(); // 11
-    render_keylog(); // 12-13
-    render_alerts(); // 14
-    render_mods(); // 15
-  //}
+  oled_set_cursor(/*col*/ 0, /*row*/ 0);
+  render_logo(); // 0
+  render_space(); // 1
+  render_layer_icon(); // 2-4
+  render_space(); // 5
+  render_layout_hint(); // 6-9
+  render_space(); // 10
+  if (is_keyboard_master()) {
+    render_keylog(); // 11-12
+  } else {
+    render_layer_bits();  // 11
+    render_space(); // 12
+  }
+  render_alerts(); // 13
+  render_mods(); // 14
 }
 
 // called on every keypress
