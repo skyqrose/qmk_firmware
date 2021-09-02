@@ -7,3 +7,5 @@ KEY_OVERRIDE_ENABLE = yes
 LTO_ENABLE = yes
 BOOTMAGIC_ENABLE = no
 MOUSEKEY_ENABLE = no
+
+SRC += keycode_to_char.c
