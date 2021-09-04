@@ -71,6 +71,18 @@ const key_override_t **key_overrides = (const key_override_t *[]){
 };
 #endif // KEY_OVERRIDE_ENABLE
 
+#ifdef TAPPING_FORCE_HOLD_PER_KEY
+bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case LSFT_T(KC_A):
+        case RSFT_T(KC_MINS):
+            return true;
+        default:
+            return false;
+    }
+}
+#endif // TAPPING_FORCE_HOLD_PER_KEY
+
 enum layers {
   L_BASE,
   L_PUNC,
