@@ -168,7 +168,7 @@ char shifted_keycodes(uint16_t keycode) {
 
 char keycode_to_char(uint16_t keycode) {
   if (keycode >= QK_TO && keycode <= QK_ONE_SHOT_LAYER_MAX) {
-    uint8_t layer = keycode & 0xFF;
+    uint8_t layer = keycode & 0xF;
     return layer_keycodes(layer);
   }
   if (keycode >= QK_MODS && keycode <= QK_MODS_MAX) {

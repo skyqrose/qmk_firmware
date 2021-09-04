@@ -84,6 +84,7 @@ const key_override_t **key_overrides = (const key_override_t *[]){
 #endif // KEY_OVERRIDE_ENABLE
 
 #ifdef TAPPING_FORCE_HOLD_PER_KEY
+// allow using shift during fast typing
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case LSFT_T(KC_A):
@@ -94,6 +95,10 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
     }
 }
 #endif // TAPPING_FORCE_HOLD_PER_KEY
+
+// TO(), but it takes effect when releasing instead of when pressing
+// see comment on TO() in quantum_keycode.h
+#define TO_RELEASE(layer) (TO(layer) ^ 0x30)
 
 enum layers {
   L_BASE,
@@ -137,7 +142,7 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     _______, KC_LSFT, KC_LCTL, KC_LGUI, KC_LALT, KC_APP,           XXXXXXX, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, KC_CAPS, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX,          XXXXXXX, TO(L_PUNC), TO(L_NAV), TO(L_SYS), TO(L_GAME), _______,
+    _______, KC_CAPS, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX,          XXXXXXX, TO(L_PUNC), TO_RELEASE(L_NAV), TO(L_SYS), TO(L_GAME), _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
                                _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
