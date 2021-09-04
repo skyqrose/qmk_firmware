@@ -29,8 +29,12 @@ enum combos {
   C_RPRN,
   C_RCBR,
   C_ENT,
-  C_TAB,
   C_ESC,
+  C_COLN,
+  C_SCLN,
+  C_UNDS,
+  C_PLUS,
+  C_EQL,
 };
 const uint16_t PROGMEM combo_lbrc[] = {KC_E, KC_U, COMBO_END};
 const uint16_t PROGMEM combo_lprn[] = {LGUI_T(KC_D), KC_J, COMBO_END};
@@ -38,9 +42,13 @@ const uint16_t PROGMEM combo_lcbr[] = {KC_C, KC_M, COMBO_END};
 const uint16_t PROGMEM combo_rbrc[] = {KC_R, KC_I, COMBO_END};
 const uint16_t PROGMEM combo_rprn[] = {KC_F, RGUI_T(KC_K), COMBO_END};
 const uint16_t PROGMEM combo_rcbr[] = {KC_V, KC_COMM, COMBO_END};
-const uint16_t PROGMEM combo_ent[] = {KC_F, RSFT_T(KC_MINS), COMBO_END};
-const uint16_t PROGMEM combo_tab[] = {LSFT(KC_A), KC_J, COMBO_END};
+const uint16_t PROGMEM combo_ent[] = {LGUI_T(KC_D), RGUI_T(KC_K), COMBO_END};
 const uint16_t PROGMEM combo_esc[] = {KC_E, KC_I, COMBO_END};
+const uint16_t PROGMEM combo_coln[] = {KC_F, RSFT_T(KC_MINS), COMBO_END};
+const uint16_t PROGMEM combo_scln[] = {KC_F, RCTL_T(KC_L), COMBO_END};
+const uint16_t PROGMEM combo_unds[] = {RCTL_T(KC_L), RSFT_T(KC_MINS), COMBO_END};
+const uint16_t PROGMEM combo_plus[] = {KC_DOT, KC_SLSH, COMBO_END};
+const uint16_t PROGMEM combo_eql[] = {KC_M, KC_COMM, COMBO_END};
 combo_t key_combos[] = {
   [C_LBRC] = COMBO(combo_lbrc, KC_LBRC),
   [C_LPRN] = COMBO(combo_lprn, KC_LPRN),
@@ -49,8 +57,12 @@ combo_t key_combos[] = {
   [C_RPRN] = COMBO(combo_rprn, KC_RPRN),
   [C_RCBR] = COMBO(combo_rcbr, KC_RCBR),
   [C_ENT] = COMBO(combo_ent, KC_ENT),
-  [C_TAB] = COMBO(combo_tab, KC_TAB),
   [C_ESC] = COMBO(combo_esc, KC_ESC),
+  [C_COLN] = COMBO(combo_coln, KC_COLN),
+  [C_SCLN] = COMBO(combo_scln, KC_SCLN),
+  [C_UNDS] = COMBO(combo_unds, KC_UNDS),
+  [C_PLUS] = COMBO(combo_plus, KC_PLUS),
+  [C_EQL] = COMBO(combo_eql, KC_EQL),
 };
 
 // instead of setting COMBO_COUNT in config.h, calculate it at compile time
@@ -64,9 +76,9 @@ bool get_combo_must_tap(uint16_t index, combo_t *combo) { return true; }
 #endif // COMBO_ENABLE
 
 #ifdef KEY_OVERRIDE_ENABLE
-const key_override_t shift_bspc_del = ko_make_basic(MOD_MASK_SHIFT, KC_BSPC, KC_DEL);
+const key_override_t bspc_del = ko_make_basic(MOD_MASK_CTRL, KC_BSPC, KC_DEL);
 const key_override_t **key_overrides = (const key_override_t *[]){
-  &shift_bspc_del,
+  &bspc_del,
   NULL
 };
 #endif // KEY_OVERRIDE_ENABLE
@@ -108,12 +120,12 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 
   [L_PUNC] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,          KC_CIRC, KC_AMPR, KC_ASTR, XXXXXXX, KC_MINS, _______,
+    _______, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,          KC_CIRC, KC_AMPR, KC_ASTR, KC_PLUS, KC_MINS, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, LSFT_T(KC_1), LCTL_T(KC_2), LGUI_T(KC_3), KC_4, KC_5,
-                                                          KC_6, KC_7, RGUI_T(KC_8), RCTL_T(KC_9), RSFT_T(KC_0), _______,
+    _______, LSFT_T(KC_4), LCTL_T(KC_2), LGUI_T(KC_3), KC_1, KC_5,
+                                                          KC_6, KC_0, RGUI_T(KC_8), RCTL_T(KC_9), RSFT_T(KC_7), _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, XXXXXXX, KC_CALC, KC_SCLN, KC_COLN, KC_EQL,           KC_PLUS, XXXXXXX, KC_COMM, KC_DOT,  KC_SLSH, _______,
+    _______, KC_BSLS, KC_PIPE, KC_SCLN, KC_COLN, KC_CALC,          XXXXXXX, KC_EQL,  KC_COMM, KC_DOT,  KC_SLSH, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
                                _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
@@ -121,12 +133,11 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 
   [L_NAV] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, KC_BRIU,          XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______,
+    _______, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, KC_MAIL,          XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, LSFT_T(KC_F24), LCTL_T(KC_MUTE), LGUI_T(KC_VOLD), KC_VOLU, KC_BRID,
-                                                                   XXXXXXX, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______,
+    _______, KC_LSFT, KC_LCTL, KC_LGUI, KC_LALT, KC_APP,           XXXXXXX, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, KC_CAPS, KC_MAIL, KC_APP,  KC_F15,  KC_F16,           XXXXXXX, TO(L_PUNC), TO(L_NAV), TO(L_SYS), TO(L_GAME), _______,
+    _______, KC_CAPS, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX,          XXXXXXX, TO(L_PUNC), TO(L_NAV), TO(L_SYS), TO(L_GAME), _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
                                _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
@@ -138,7 +149,7 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     _______, KC_LSFT, KC_LCTL, KC_LGUI, KC_LALT, XXXXXXX,          KC_SLEP, KC_F4,   KC_F5,   KC_F6,   KC_F11,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, KC_CAPS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F12,  _______,
+    _______, KC_CAPS, XXXXXXX, KC_BRID, KC_BRIU, XXXXXXX,          XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F12,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
                                _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
