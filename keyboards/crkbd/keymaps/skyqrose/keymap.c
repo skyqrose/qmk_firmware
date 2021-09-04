@@ -90,7 +90,7 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     KC_LALT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RALT,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               KC_TAB, TT(L_PUNC), KC_BSPC,         KC_SPC, TT(L_NAV), TO(L_BASE)
+                               KC_TAB, MO(L_PUNC), KC_BSPC,         KC_SPC, MO(L_NAV), TO(L_BASE)
 //                            +--------+--------+--------+        +--------+--------+--------+
   ),
 
@@ -109,12 +109,12 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 
   [L_NAV] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, TO(L_SYS), KC_MPRV, KC_MPLY, KC_MNXT, KC_BRIU,        XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______,
+    _______, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, KC_BRIU,          XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     _______, LSFT_T(KC_F24), LCTL_T(KC_MUTE), LGUI_T(KC_VOLD), KC_VOLU, KC_BRID,
                                                                    XXXXXXX, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, KC_CAPS, KC_MAIL, KC_APP,  KC_F15,  KC_F16,           XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+    _______, KC_CAPS, KC_MAIL, KC_APP,  KC_F15,  KC_F16,           XXXXXXX, TO(L_PUNC), TO(L_NAV), TO(L_SYS), TO(L_GAME), _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
                                _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
@@ -122,7 +122,7 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 
   [L_SYS] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, XXXXXXX, TO(L_GAME), XXXXXXX, XXXXXXX, XXXXXXX,       KC_PWR,  KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,
+    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          KC_PWR,  KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     _______, KC_LSFT, KC_LCTL, KC_LGUI, KC_LALT, XXXXXXX,          KC_SLEP, KC_F4,   KC_F5,   KC_F6,   KC_F11,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+

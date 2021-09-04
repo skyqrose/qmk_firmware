@@ -100,17 +100,17 @@ enum layers {
   L_SYS,
   L_GAME,
 };
-char layer_keycodes(uint16_t keycode) {
-  switch (keycode) {
-    case TO(L_BASE):
+char layer_keycodes(uint8_t layer) {
+  switch (layer) {
+    case L_BASE:
       return 'A';
-    case TT(L_PUNC):
+    case L_PUNC:
       return '#';
-    case TT(L_NAV):
+    case L_NAV:
       return 0x12; // up+down arrows
-    case TO(L_SYS):
+    case L_SYS:
       return '*';
-    case TO(L_GAME):
+    case L_GAME:
       return 'G';
     default:
       return ' ';
@@ -167,8 +167,9 @@ char shifted_keycodes(uint16_t keycode) {
 }
 
 char keycode_to_char(uint16_t keycode) {
-  if ((keycode >= QK_TO && keycode <= QK_TO_MAX) || (keycode >= QK_LAYER_TAP_TOGGLE && keycode <= QK_LAYER_TAP_TOGGLE_MAX)) {
-    return layer_keycodes(keycode);
+  if (keycode >= QK_TO && keycode <= QK_ONE_SHOT_LAYER_MAX) {
+    uint8_t layer = keycode & 0xFF;
+    return layer_keycodes(layer);
   }
   if (keycode >= QK_MODS && keycode <= QK_MODS_MAX) {
     return shifted_keycodes(keycode);
