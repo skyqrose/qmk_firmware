@@ -341,14 +341,33 @@ void oled_task_user(void) {
   render_alerts(); // 13
   render_mods(); // 14
 }
+#endif // OLED_ENABLE
 
 // called on every keypress
 // return true to continue normal processing
 // return false to stop processing
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  led_t host_led_state = host_keyboard_led_state();
+  uint8_t modifiers = get_mods()|get_oneshot_mods();
+#ifdef OLED_ENABLE
   if (record->event.pressed) {
     set_keylog(keycode, record);
   }
+#endif // OLED_ENABLE
+  // turn - to _ if caps lock is pressed
+  if(host_led_state.caps_lock && keycode == RSFT_T(KC_MINS)) {
+    if (record->event.pressed) {
+      if (modifiers && MOD_BIT(KC_LSFT)) {
+        unregister_code(KC_LSFT);
+        tap_code(KC_MINS);
+        register_code(KC_LSFT);
+      } else {
+        register_code(KC_LSFT);
+        tap_code(KC_MINS);
+        unregister_code(KC_LSFT);
+      }
+    }
+    return false;
+  }
   return true;
 }
-#endif // OLED_ENABLE
