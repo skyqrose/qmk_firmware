@@ -91,6 +91,7 @@ const key_override_t **key_overrides = (const key_override_t *[]){
 
 #ifdef TAPPING_FORCE_HOLD_PER_KEY
 // allow using shift during fast typing
+// e.g. when typing "-S", don't interpret right shift as trying to repeat -
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case LSFT_T(KC_A):
