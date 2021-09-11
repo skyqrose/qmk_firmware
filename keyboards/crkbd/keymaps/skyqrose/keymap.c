@@ -35,6 +35,8 @@ enum combos {
   C_UNDS,
   C_PLUS,
   C_EQL,
+  C_GRV,
+  C_TILD,
 };
 const uint16_t PROGMEM combo_lbrc[] = {KC_E, KC_U, COMBO_END};
 const uint16_t PROGMEM combo_lprn[] = {LGUI_T(KC_D), KC_J, COMBO_END};
@@ -49,6 +51,8 @@ const uint16_t PROGMEM combo_scln[] = {KC_F, RCTL_T(KC_L), COMBO_END};
 const uint16_t PROGMEM combo_unds[] = {RCTL_T(KC_L), RSFT_T(KC_MINS), COMBO_END};
 const uint16_t PROGMEM combo_plus[] = {KC_DOT, KC_SLSH, COMBO_END};
 const uint16_t PROGMEM combo_eql[] = {KC_M, KC_COMM, COMBO_END};
+const uint16_t PROGMEM combo_grv[] = {KC_Q, KC_W, COMBO_END};
+const uint16_t PROGMEM combo_tld[] = {KC_W, KC_E, COMBO_END};
 combo_t key_combos[] = {
   [C_LBRC] = COMBO(combo_lbrc, KC_LBRC),
   [C_LPRN] = COMBO(combo_lprn, KC_LPRN),
@@ -63,6 +67,8 @@ combo_t key_combos[] = {
   [C_UNDS] = COMBO(combo_unds, KC_UNDS),
   [C_PLUS] = COMBO(combo_plus, KC_PLUS),
   [C_EQL] = COMBO(combo_eql, KC_EQL),
+  [C_GRV] = COMBO(combo_grv, KC_GRV),
+  [C_TILD] = COMBO(combo_tld, KC_TILD),
 };
 
 // instead of setting COMBO_COUNT in config.h, calculate it at compile time
