@@ -170,9 +170,9 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     KC_TAB,  KC_1,    KC_Q,    KC_W,    KC_E,    KC_R,             XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_ESC,  KC_2,    KC_A,    KC_S,    KC_D,    KC_F,             XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    KC_ESC,  KC_LSFT, KC_A,    KC_S,    KC_D,    KC_F,             XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_LSFT, KC_LSFT, KC_MINS, KC_LBRC, KC_RBRC, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    KC_LGUI, KC_LSFT, KC_MINS, KC_C,    KC_LBRC, KC_RBRC,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
                                KC_LALT, KC_LCTL, KC_SPC,           _______, XXXXXXX, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
