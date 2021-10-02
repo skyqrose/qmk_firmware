@@ -33,23 +33,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPLIT_LED_STATE_ENABLE
 #define SPLIT_MODS_ENABLE
 
-#define TAPPING_FORCE_HOLD_PER_KEY
 #define TAPPING_TERM 180
-#define TAPPING_TOGGLE 1
 #define IGNORE_MOD_TAP_INTERRUPT
 #define PERMISSIVE_HOLD
 
 #define OLED_FONT_H "keyboards/crkbd/keymaps/skyqrose/glcdfont.c"
-
-// Combos
-// #define COMBO_ENABLE // set by rules.mk
-// #define COMBO_COUNT 0 // counted at compile time by COMBO_LEN instead
-#define COMBO_TERM 60
-// My combos are all length 2, I'll never need more than length 6
-#define EXTRA_SHORT_COMBOS
-// I have combos that use mod keys. Tap for a combo, hold for a mod.
-// along with definition of get_combo_must_tap
-#define COMBO_MUST_TAP_PER_COMBO
 
 #define FORCE_NKRO
 #define USB_POLLING_INTERVAL_MS 2

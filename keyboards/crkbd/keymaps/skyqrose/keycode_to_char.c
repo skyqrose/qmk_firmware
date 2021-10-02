@@ -95,25 +95,37 @@ char upper_keycode_chars(uint16_t keycode) {
 
 enum layers {
   L_BASE,
+  L_LAYR,
+  L_NUM,
   L_PUNC,
+  L_BRC,
   L_NAV,
   L_SYS,
+  L_FN,
   L_GAME,
 };
 char layer_keycodes(uint8_t layer) {
   switch (layer) {
     case L_BASE:
       return 'A';
-    case L_PUNC:
+    case L_LAYR:
+      return '=';
+    case L_NUM:
       return '#';
+    case L_PUNC:
+      return '@';
+    case L_BRC:
+      return '[';
     case L_NAV:
       return 0x12; // up+down arrows
     case L_SYS:
       return '*';
+    case L_FN:
+      return 'F';
     case L_GAME:
       return 'G';
     default:
-      return ' ';
+      return '?';
   }
 }
 

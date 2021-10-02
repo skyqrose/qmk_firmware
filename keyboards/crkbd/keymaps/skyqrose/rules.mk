@@ -1,6 +1,5 @@
 OLED_ENABLE = yes
 OLED_DRIVER = SSD1306
-COMBO_ENABLE = yes
 KEY_OVERRIDE_ENABLE = yes
 
 # Reduce firmware size

@@ -20,83 +20,41 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include "keycode_to_char.h"
 
-#ifdef COMBO_ENABLE
-enum combos {
-  C_LBRC,
-  C_LPRN,
-  C_LCBR,
-  C_RBRC,
-  C_RPRN,
-  C_RCBR,
-  C_ENT,
-  C_ESC,
-  C_COLN,
-  C_SCLN,
-  C_UNDS,
-  C_PLUS,
-  C_EQL,
-  C_GRV,
-  C_TILD,
+enum custom_keycodes {
+  /* If tapped, then KC_BSPC
+   * If tapped and GUI is pressed, then KC_GRV for switching windows within an application
+   * If tapped and SHFT is pressed, then KC_ESC
+   * If held, then either LCTL or LGUI depending on THUMB_MOD
+   * Set to an unused basic keycode so it can be used in mod tap
+   */
+  C_MODBSPC = SAFE_RANGE,
+  // Set THUMB_MOD to LCTL
+  C_TCTL,
+  // Set THUMB_MOD to RCTL
+  C_TGUI,
 };
-const uint16_t PROGMEM combo_lbrc[] = {KC_E, KC_U, COMBO_END};
-const uint16_t PROGMEM combo_lprn[] = {LGUI_T(KC_D), KC_J, COMBO_END};
-const uint16_t PROGMEM combo_lcbr[] = {KC_C, KC_M, COMBO_END};
-const uint16_t PROGMEM combo_rbrc[] = {KC_R, KC_I, COMBO_END};
-const uint16_t PROGMEM combo_rprn[] = {KC_F, RGUI_T(KC_K), COMBO_END};
-const uint16_t PROGMEM combo_rcbr[] = {KC_V, KC_COMM, COMBO_END};
-const uint16_t PROGMEM combo_ent[] = {LGUI_T(KC_D), RGUI_T(KC_K), COMBO_END};
-const uint16_t PROGMEM combo_esc[] = {KC_E, KC_I, COMBO_END};
-const uint16_t PROGMEM combo_coln[] = {KC_F, RSFT_T(KC_MINS), COMBO_END};
-const uint16_t PROGMEM combo_scln[] = {KC_F, RCTL_T(KC_L), COMBO_END};
-const uint16_t PROGMEM combo_unds[] = {RCTL_T(KC_L), RSFT_T(KC_MINS), COMBO_END};
-const uint16_t PROGMEM combo_plus[] = {KC_DOT, KC_SLSH, COMBO_END};
-const uint16_t PROGMEM combo_eql[] = {KC_M, KC_COMM, COMBO_END};
-const uint16_t PROGMEM combo_grv[] = {KC_Q, KC_W, COMBO_END};
-const uint16_t PROGMEM combo_tld[] = {KC_W, KC_E, COMBO_END};
-combo_t key_combos[] = {
-  [C_LBRC] = COMBO(combo_lbrc, KC_LBRC),
-  [C_LPRN] = COMBO(combo_lprn, KC_LPRN),
-  [C_LCBR] = COMBO(combo_lcbr, KC_LCBR),
-  [C_RBRC] = COMBO(combo_rbrc, KC_RBRC),
-  [C_RPRN] = COMBO(combo_rprn, KC_RPRN),
-  [C_RCBR] = COMBO(combo_rcbr, KC_RCBR),
-  [C_ENT] = COMBO(combo_ent, KC_ENT),
-  [C_ESC] = COMBO(combo_esc, KC_ESC),
-  [C_COLN] = COMBO(combo_coln, KC_COLN),
-  [C_SCLN] = COMBO(combo_scln, KC_SCLN),
-  [C_UNDS] = COMBO(combo_unds, KC_UNDS),
-  [C_PLUS] = COMBO(combo_plus, KC_PLUS),
-  [C_EQL] = COMBO(combo_eql, KC_EQL),
-  [C_GRV] = COMBO(combo_grv, KC_GRV),
-  [C_TILD] = COMBO(combo_tld, KC_TILD),
-};
-
-// instead of setting COMBO_COUNT in config.h, calculate it at compile time
-uint16_t COMBO_LEN = sizeof(key_combos) / sizeof(key_combos[0]);
-
-#define COMBO_ONLY_FROM_LAYER L_BASE
-
-// prevents holding combos, because I have shared mod+combo keys
-// also requires COMBO_MUST_TAP_PER_COMBO
-bool get_combo_must_tap(uint16_t index, combo_t *combo) { return true; }
-#endif // COMBO_ENABLE
 
 #ifdef KEY_OVERRIDE_ENABLE
-const key_override_t bspc_del = ko_make_basic(MOD_MASK_CTRL, KC_BSPC, KC_DEL);
+const key_override_t comm_scln = ko_make_basic(MOD_MASK_SHIFT, KC_COMM, KC_SCLN);
+const key_override_t dot_cln = ko_make_basic(MOD_MASK_SHIFT, KC_DOT, KC_COLN);
+const key_override_t gui_bspc_tild = ko_make_basic(MOD_MASK_GUI, LGUI_T(KC_BSPC), KC_GRV); // application switching
+const key_override_t sft_bspc_esc = ko_make_basic(MOD_MASK_SHIFT, LGUI_T(KC_BSPC), KC_ESC);
+const key_override_t ctl_bspc_del = ko_make_basic(MOD_MASK_CTRL, LGUI_T(KC_BSPC), KC_DEL);
 const key_override_t **key_overrides = (const key_override_t *[]){
-  &bspc_del,
+  &comm_scln,
+  &dot_cln,
+  &gui_bspc_tild,
+  &sft_bspc_esc,
+  &ctl_bspc_del,
   NULL
 };
 #endif // KEY_OVERRIDE_ENABLE
 
 #ifdef TAPPING_FORCE_HOLD_PER_KEY
-// allow using shift during fast typing
-// e.g. when typing "-S", don't interpret right shift as trying to repeat -
+// keep tapping_force_hold off for most keys to allow double taps
+// but turn it on for some keys that are likely to be quickly tapped then held when typing
 bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case LSFT_T(KC_A):
-        case RSFT_T(KC_MINS):
-            return true;
         default:
             return false;
     }
@@ -109,35 +67,76 @@ bool get_tapping_force_hold(uint16_t keycode, keyrecord_t *record) {
 
 enum layers {
   L_BASE,
+  L_LAYR,
+  L_NUM,
   L_PUNC,
+  L_BRC,
   L_NAV,
   L_SYS,
+  L_FN,
   L_GAME,
 };
-#define NUM_LAYERS 5
+#define NUM_LAYERS 9
 
 const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
   [L_BASE] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_GRV,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_ENT,
+    XXXXXXX, LALT_T(KC_Q), LCTL_T(KC_W), LGUI_T(KC_E), LSFT_T(KC_R), KC_T,
+                                                  KC_Y, RSFT_T(KC_U), RGUI_T(KC_I), RCTL_T(KC_O), RALT_T(KC_P), XXXXXXX,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_ESC, LSFT_T(KC_A), LCTL_T(KC_S), LGUI_T(KC_D), KC_F, KC_G,
-                                                       KC_H, KC_J, RGUI_T(KC_K), RCTL_T(KC_L), RSFT_T(KC_MINS), KC_QUOT,
+    XXXXXXX, LT(L_NAV,KC_A), KC_S, LT(L_NUM,KC_D), LT(L_PUNC,KC_F), KC_G,
+                                                           KC_H, LT(L_BRC,KC_J), LT(L_SYS,KC_K), KC_L, KC_MINS, XXXXXXX,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_LALT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RALT,
+    XXXXXXX, LT(L_FN,KC_Z),    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_QUOT, XXXXXXX,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               KC_TAB, MO(L_PUNC), KC_BSPC,         KC_SPC, MO(L_NAV), TO(L_BASE)
+                     MO(L_LAYR), KC_TAB, LGUI_T(KC_BSPC),          LSFT_T(KC_SPC), KC_ENT, TO(L_BASE)
+//                            +--------+--------+--------+        +--------+--------+--------+
+  ),
+
+  [L_LAYR] = LAYOUT_split_3x6_3(
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+    _______, XXXXXXX, C_TCTL,  C_TGUI,  KC_CAPS, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+    _______, TO(L_NAV), XXXXXXX, TO(L_NUM), TO(L_PUNC), TO(L_GAME),
+                                                               XXXXXXX, TO(L_BRC), TO(L_SYS), XXXXXXX, XXXXXXX, _______,
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+    _______, TO(L_FN), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+                               _______, _______, _______,          _______, _______, _______
+//                            +--------+--------+--------+        +--------+--------+--------+
+  ),
+
+  [L_NUM] = LAYOUT_split_3x6_3(
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+    _______, KC_LALT, KC_LCTL, KC_LGUI, KC_LSFT, XXXXXXX,          KC_9,    KC_3,    KC_4,    KC_5,    KC_6,    _______,
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+    _______, XXXXXXX, XXXXXXX, _______, XXXXXXX, KC_CALC,          KC_8,    KC_0,    KC_1,    KC_2,    KC_MINS, _______,
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          KC_7,    XXXXXXX, KC_SCLN, KC_COLN, KC_SLSH, _______,
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+                               _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
   ),
 
   [L_PUNC] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,          KC_CIRC, KC_AMPR, KC_ASTR, KC_PLUS, KC_MINS, _______,
+    _______, KC_LALT, KC_LCTL, KC_LGUI, KC_LSFT, XXXXXXX,          KC_PERC, KC_CIRC, KC_ASTR, KC_HASH, KC_DLR,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, LSFT_T(KC_4), LCTL_T(KC_2), LGUI_T(KC_3), KC_1, KC_5,
-                                                          KC_6, KC_0, RGUI_T(KC_8), RCTL_T(KC_9), RSFT_T(KC_7), _______,
+    _______, XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX,          KC_TILD, KC_EQL,  KC_PLUS, KC_AT,   KC_GRV,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, KC_BSLS, KC_PIPE, KC_SCLN, KC_COLN, KC_CALC,          XXXXXXX, KC_EQL,  KC_COMM, KC_DOT,  KC_SLSH, _______,
+    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          KC_AMPR, KC_PIPE, KC_QUES, KC_EXLM, KC_BSLS, _______,
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+                               _______, _______, _______,          _______, _______, _______
+//                            +--------+--------+--------+        +--------+--------+--------+
+  ),
+
+  [L_BRC] = LAYOUT_split_3x6_3(
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+    _______, XXXXXXX, XXXXXXX, KC_LBRC, KC_RBRC, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+    _______, KC_LABK, KC_RABK, KC_LPRN, KC_RPRN, XXXXXXX,          XXXXXXX, _______, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+    _______, XXXXXXX, XXXXXXX, KC_LCBR, KC_RCBR, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
                                _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
@@ -145,11 +144,11 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 
   [L_NAV] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, KC_MAIL,          XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______,
+    _______, KC_LALT, KC_LCTL, KC_LGUI, KC_LSFT, XXXXXXX,          XXXXXXX, KC_HOME, KC_PGDN, KC_PGUP, KC_END,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, KC_LSFT, KC_LCTL, KC_LGUI, KC_LALT, KC_APP,           XXXXXXX, KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______,
+    _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          KC_APP,  KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, KC_CAPS, KC_MUTE, KC_VOLD, KC_VOLU, XXXXXXX,          XXXXXXX, TO(L_PUNC), TO_RELEASE(L_NAV), TO(L_SYS), TO(L_GAME), _______,
+    _______, KC_Z,    KC_X,    KC_C,    KC_V,    XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
                                _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
@@ -157,11 +156,23 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 
   [L_SYS] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          KC_PWR,  KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,
+    _______, KC_PSCR, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX,          XXXXXXX, KC_RSFT, KC_RGUI, KC_RCTL, KC_RALT, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, KC_LSFT, KC_LCTL, KC_LGUI, KC_LALT, XXXXXXX,          KC_SLEP, KC_F4,   KC_F5,   KC_F6,   KC_F11,  _______,
+    _______, XXXXXXX, KC_VOLD, KC_MUTE, KC_VOLU, KC_SLEP,          XXXXXXX, XXXXXXX, _______, XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, KC_CAPS, XXXXXXX, KC_BRID, KC_BRIU, XXXXXXX,          XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F12,  _______,
+    _______, XXXXXXX, KC_BRID, XXXXXXX, KC_BRIU, KC_PWR,           XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+                               _______, _______, _______,          _______, _______, _______
+//                            +--------+--------+--------+        +--------+--------+--------+
+  ),
+
+  [L_FN] = LAYOUT_split_3x6_3(
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+    _______, KC_LALT, KC_LCTL, KC_LGUI, KC_LSFT, XXXXXXX,          XXXXXXX, KC_F7,   KC_F8,   KC_F9,   KC_F10,  _______,
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, KC_F4,   KC_F5,   KC_F6,   KC_F11,  _______,
+// +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
+    _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F12,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
                                _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
@@ -170,11 +181,11 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     KC_TAB,  KC_1,    KC_Q,    KC_W,    KC_E,    KC_R,             XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_ESC,  KC_LSFT, KC_A,    KC_S,    KC_D,    KC_F,             XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    KC_ESC,  KC_LSFT, KC_A,    KC_S,    KC_D,    KC_F,             XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_LGUI, KC_LSFT, KC_MINS, KC_C,    KC_LBRC, KC_RBRC,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+    KC_LGUI, KC_LSFT, KC_MINS, KC_C,    KC_LBRC, KC_RBRC,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               KC_LALT, KC_LCTL, KC_SPC,           _______, XXXXXXX, _______
+                               KC_LALT, KC_LCTL, KC_SPC,           XXXXXXX, XXXXXXX, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
   )
 };
@@ -230,10 +241,25 @@ void render_layer_icon(void) {
       {0xa8, 0xa9, 0xaa},
       {0xc8, 0xc9, 0xca}
     },
-    [L_PUNC] = {
+    [L_LAYR] = {
+      {' ', ' ', ' '},
+      {' ', '=', ' '},
+      {' ', ' ', ' '}
+    },
+    [L_NUM] = {
       {0x8b, 0x8c, 0x8d},
       {0xab, 0xac, 0xad},
       {0xcb, 0xcc, 0xcd}
+    },
+    [L_PUNC] = {
+      {' ', ' ', ' '},
+      {' ', '@', ' '},
+      {' ', ' ', ' '}
+    },
+    [L_BRC] = {
+      {'/', ' ', '\\'},
+      {'|', ' ', '|'},
+      {'\\', ' ', '/'}
     },
     [L_NAV] = {
       {0x8e, 0x8f, 0x90},
@@ -244,6 +270,11 @@ void render_layer_icon(void) {
       {0x91, 0x92, 0x93},
       {0xb1, 0xb2, 0xb3},
       {0xd1, 0xd2, 0xd3}
+    },
+    [L_FN] = {
+      {' ', ' ', ' '},
+      {' ', 'F', 'n'},
+      {' ', ' ', ' '}
     },
     [L_GAME] = {
       {' ', ' ', ' '},
@@ -367,6 +398,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         unregister_code(KC_LSFT);
       }
     }
+    return false;
+  }
+  if (keycode == C_TCTL || keycode == C_TGUI) {
     return false;
   }
   return true;
