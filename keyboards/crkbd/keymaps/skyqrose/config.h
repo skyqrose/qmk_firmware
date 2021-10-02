@@ -33,7 +33,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPLIT_LED_STATE_ENABLE
 #define SPLIT_MODS_ENABLE
 
-#define TAPPING_TERM 180
+#define TAPPING_TERM 280
 #define IGNORE_MOD_TAP_INTERRUPT
 #define PERMISSIVE_HOLD
 

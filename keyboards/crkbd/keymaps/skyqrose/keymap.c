@@ -84,12 +84,12 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
     XXXXXXX, LALT_T(KC_Q), LCTL_T(KC_W), LGUI_T(KC_E), LSFT_T(KC_R), KC_T,
                                                   KC_Y, RSFT_T(KC_U), RGUI_T(KC_I), RCTL_T(KC_O), RALT_T(KC_P), XXXXXXX,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    XXXXXXX, LT(L_NAV,KC_A), KC_S, LT(L_NUM,KC_D), LT(L_PUNC,KC_F), KC_G,
-                                                           KC_H, LT(L_BRC,KC_J), LT(L_SYS,KC_K), KC_L, KC_MINS, XXXXXXX,
+    XXXXXXX, LSFT_T(KC_A), KC_S, LT(L_NUM,KC_D), LT(L_PUNC,KC_F), KC_G,
+                                                   KC_H, LT(L_BRC,KC_J), LT(L_SYS,KC_K), KC_L, RSFT_T(KC_MINS), XXXXXXX,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    XXXXXXX, LT(L_FN,KC_Z),    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_QUOT, XXXXXXX,
+    XXXXXXX, LT(L_FN,KC_Z), KC_X, KC_C, KC_V,    KC_B,             KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_QUOT, XXXXXXX,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                     MO(L_LAYR), KC_TAB, LGUI_T(KC_BSPC),          LSFT_T(KC_SPC), KC_ENT, TO(L_BASE)
+                     MO(L_LAYR), KC_TAB, LGUI_T(KC_BSPC),          LSFT_T(KC_SPC), LT(L_NAV,KC_ENT), TO(L_BASE)
 //                            +--------+--------+--------+        +--------+--------+--------+
   ),
 
@@ -169,12 +169,12 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     _______, XXXXXXX, C_TCTL,  C_TGUI,  KC_CAPS, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, TO(L_NAV), XXXXXXX, TO(L_NUM), TO(L_PUNC), TO(L_GAME),
+    _______, XXXXXXX, XXXXXXX, TO(L_NUM), TO(L_PUNC), TO(L_GAME),
                                                                XXXXXXX, TO(L_BRC), TO(L_SYS), XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     _______, TO(L_FN), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               _______, _______, _______,          _______, _______, _______
+                               _______, _______, _______,          _______, TO(L_NAV), _______
 //                            +--------+--------+--------+        +--------+--------+--------+
   ),
 
