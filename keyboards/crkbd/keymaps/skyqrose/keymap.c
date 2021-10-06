@@ -93,11 +93,11 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 
   [L_NUM] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, KC_LALT, KC_LCTL, KC_LGUI, KC_LSFT, XXXXXXX,          KC_9,    KC_3,    KC_4,    KC_5,    KC_6,    _______,
+    _______, KC_LALT, KC_LCTL, KC_LGUI, KC_LSFT, XXXXXXX,          KC_6,    KC_7,    KC_8,    KC_9,    XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, XXXXXXX, XXXXXXX, _______, XXXXXXX, KC_CALC,          KC_8,    KC_0,    KC_1,    KC_2,    KC_MINS, _______,
+    _______, XXXXXXX, XXXXXXX, _______, XXXXXXX, KC_CALC,          KC_5,    KC_0,    KC_1,    KC_2,    KC_MINS, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          KC_7,    XXXXXXX, KC_SCLN, KC_COLN, KC_SLSH, _______,
+    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          KC_4,    KC_3,    KC_SCLN, KC_COLN, KC_SLSH, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
                                _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
