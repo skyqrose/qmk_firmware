@@ -37,15 +37,13 @@ enum custom_keycodes {
 #ifdef KEY_OVERRIDE_ENABLE
 const key_override_t comm_scln = ko_make_basic(MOD_MASK_SHIFT, KC_COMM, KC_SCLN);
 const key_override_t dot_cln = ko_make_basic(MOD_MASK_SHIFT, KC_DOT, KC_COLN);
-const key_override_t gui_bspc_tild = ko_make_basic(MOD_MASK_GUI, LGUI_T(KC_BSPC), KC_GRV); // application switching
-const key_override_t sft_bspc_esc = ko_make_basic(MOD_MASK_SHIFT, LGUI_T(KC_BSPC), KC_ESC);
-const key_override_t ctl_bspc_del = ko_make_basic(MOD_MASK_CTRL, LGUI_T(KC_BSPC), KC_DEL);
+const key_override_t gui_tild = ko_make_basic(MOD_MASK_GUI | MOD_MASK_CTRL, LGUI_T(KC_TAB), KC_TILD); // application switching
+const key_override_t thumb_esc = ko_make_basic(MOD_MASK_GUI, LSFT_T(KC_ENT), KC_ESC);
 const key_override_t **key_overrides = (const key_override_t *[]){
   &comm_scln,
   &dot_cln,
-  &gui_bspc_tild,
-  &sft_bspc_esc,
-  &ctl_bspc_del,
+  &gui_tild,
+  &thumb_esc,
   NULL
 };
 #endif // KEY_OVERRIDE_ENABLE
@@ -84,12 +82,12 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
     XXXXXXX, LALT_T(KC_Q), LCTL_T(KC_W), LGUI_T(KC_E), LSFT_T(KC_R), KC_T,
                                                   KC_Y, RSFT_T(KC_U), RGUI_T(KC_I), RCTL_T(KC_O), RALT_T(KC_P), XXXXXXX,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    XXXXXXX, LSFT_T(KC_A), KC_S, LT(L_NUM,KC_D), LT(L_PUNC,KC_F), KC_G,
-                                                   KC_H, LT(L_BRC,KC_J), LT(L_SYS,KC_K), KC_L, RSFT_T(KC_MINS), XXXXXXX,
+    MO(L_LAYR), LSFT_T(KC_A), KC_S, LT(L_NUM,KC_D), LT(L_PUNC,KC_F), KC_G,
+                                                   KC_H, LT(L_BRC,KC_J), LT(L_SYS,KC_K), KC_L, RSFT_T(KC_MINS), MO(L_LAYR),
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     XXXXXXX, LT(L_FN,KC_Z), KC_X, KC_C, KC_V,    KC_B,             KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_QUOT, XXXXXXX,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                     MO(L_LAYR), KC_TAB, LGUI_T(KC_BSPC),          LSFT_T(KC_SPC), LT(L_NAV,KC_ENT), TO(L_BASE)
+                         KC_BSPC, KC_SPC, LGUI_T(KC_TAB),          LSFT_T(KC_ENT), LT(L_NAV,KC_SPC), KC_DEL
 //                            +--------+--------+--------+        +--------+--------+--------+
   ),
 
@@ -169,12 +167,12 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     _______, XXXXXXX, C_TCTL,  C_TGUI,  KC_CAPS, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, XXXXXXX, XXXXXXX, TO(L_NUM), TO(L_PUNC), TO(L_GAME),
-                                                               XXXXXXX, TO(L_BRC), TO(L_SYS), XXXXXXX, XXXXXXX, _______,
+    _______, KC_CAPS, XXXXXXX, TO(L_NUM), TO(L_PUNC), TO(L_GAME),
+                                                               XXXXXXX, TO(L_BRC), TO(L_SYS), XXXXXXX, KC_CAPS, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     _______, TO(L_FN), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               _______, _______, _______,          _______, TO(L_NAV), _______
+                               _______, _______, _______,          _______, TO(L_NAV), TO(L_BASE)
 //                            +--------+--------+--------+        +--------+--------+--------+
   ),
 
@@ -186,7 +184,7 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     KC_LGUI, KC_LSFT, KC_MINS, KC_C,    KC_LBRC, KC_RBRC,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               KC_LALT, KC_LCTL, KC_SPC,           XXXXXXX, XXXXXXX, _______
+                               KC_LALT, KC_LCTL, KC_SPC,           XXXXXXX, XXXXXXX, TO(L_BASE)
 //                            +--------+--------+--------+        +--------+--------+--------+
   )
 };
