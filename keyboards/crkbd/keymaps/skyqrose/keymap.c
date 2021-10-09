@@ -93,7 +93,7 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 
   [L_NUM] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, KC_LALT, KC_LCTL, KC_LGUI, KC_LSFT, XXXXXXX,          KC_6,    KC_7,    KC_8,    KC_9,    XXXXXXX, _______,
+    _______, KC_LALT, KC_LCTL, KC_LGUI, KC_LSFT, XXXXXXX,          KC_6,    KC_7,    KC_8,    KC_9,    KC_PLUS, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     _______, XXXXXXX, XXXXXXX, _______, XXXXXXX, KC_CALC,          KC_5,    KC_0,    KC_1,    KC_2,    KC_MINS, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
@@ -107,9 +107,9 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
     _______, KC_LALT, KC_LCTL, KC_LGUI, KC_LSFT, XXXXXXX,          KC_PERC, KC_CIRC, KC_ASTR, KC_HASH, KC_DLR,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX,          KC_TILD, KC_EQL,  KC_PLUS, KC_AT,   KC_GRV,  _______,
+    _______, XXXXXXX, XXXXXXX, XXXXXXX, _______, XXXXXXX,          KC_BSLS, KC_TILD, KC_EQL,  KC_AT,   KC_GRV,  _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          KC_AMPR, KC_PIPE, KC_QUES, KC_EXLM, KC_BSLS, _______,
+    _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,          KC_AMPR, KC_PIPE, KC_QUES, KC_EXLM, KC_SLSH, _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
                                _______, _______, _______,          _______, _______, _______
 //                            +--------+--------+--------+        +--------+--------+--------+
