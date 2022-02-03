@@ -2,6 +2,30 @@
 #include <stdio.h>
 #include "keycode_to_char.h"
 
+const char override_char(uint8_t mods, uint8_t keycode8) {
+  if (mods & MOD_MASK_SHIFT) {
+    switch (keycode8) {
+      case KC_COMM:
+        return ';';
+      case KC_DOT:
+        return ':';
+      case KC_BSPC:
+        return 0xD9; // esc
+      default:
+        return 0x00;
+    }
+  }
+  if (mods & MOD_MASK_CTRL) {
+    switch (keycode8) {
+      case KC_BSPC:
+        return '~';
+      default:
+        return 0x00;
+    }
+  }
+  return 0x00;
+}
+
 const char keycode_chars[0x74] = {
   /* 0x00 */ ' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd',
   /* 0x08 */ 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
@@ -179,14 +203,19 @@ char shifted_keycodes(uint16_t keycode) {
 }
 
 char keycode_to_char(uint16_t keycode) {
+  uint8_t mods = (get_mods()|get_oneshot_mods());
   if (keycode >= QK_TO && keycode <= QK_ONE_SHOT_LAYER_MAX) {
     uint8_t layer = keycode & 0xF;
     return layer_keycodes(layer);
   }
+  char override_result = override_char(mods, keycode & 0xF);
+  if (override_result) {
+    return override_result;
+  }
   if (keycode >= QK_MODS && keycode <= QK_MODS_MAX) {
     return shifted_keycodes(keycode);
   }
-  bool shift = (get_mods()|get_oneshot_mods()) & MOD_MASK_SHIFT;
+  bool shift = mods & MOD_MASK_SHIFT;
   if ((keycode >= QK_MOD_TAP && keycode <= QK_MOD_TAP_MAX) || (keycode >= QK_LAYER_TAP && keycode <= QK_LAYER_TAP_MAX)) {
     keycode = keycode & 0xFF;
   }
