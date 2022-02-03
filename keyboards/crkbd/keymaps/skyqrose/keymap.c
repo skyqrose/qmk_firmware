@@ -178,13 +178,13 @@ const uint16_t PROGMEM keymaps[NUM_LAYERS][MATRIX_ROWS][MATRIX_COLS] = {
 
   [L_GAME] = LAYOUT_split_3x6_3(
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_TAB,  KC_1,    KC_Q,    KC_W,    KC_E,    KC_R,             XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+    KC_TAB,  KC_1,    KC_Q,    KC_W,    KC_E,    KC_R,             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_ESC,  KC_LSFT, KC_A,    KC_S,    KC_D,    KC_F,             XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+    KC_ESC,  KC_LSFT, KC_A,    KC_S,    KC_D,    KC_F,             KC_H,    KC_J,    KC_K,    KC_L,    KC_T,    _______,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-    KC_LGUI, KC_LSFT, KC_MINS, KC_C,    KC_LBRC, KC_RBRC,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+    KC_LGUI, KC_LSFT, KC_MINS, KC_C,    KC_LBRC, KC_RBRC,          KC_N,    KC_M,    KC_C,    KC_X,    KC_Z,    KC_RSFT,
 // +--------+--------+--------+--------+--------+--------+        +--------+--------+--------+--------+--------+--------+
-                               KC_LALT, KC_LCTL, KC_SPC,           XXXXXXX, XXXXXXX, TO(L_BASE)
+                               KC_LALT, KC_LCTL, KC_SPC,           KC_ENT,  KC_SPC,  TO(L_BASE)
 //                            +--------+--------+--------+        +--------+--------+--------+
   )
 };
