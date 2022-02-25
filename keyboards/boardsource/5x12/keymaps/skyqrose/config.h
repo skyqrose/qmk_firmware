@@ -3,7 +3,7 @@
 // tapping and holding
 // treat mod taps like layer taps, instead of strongly preferring to hold.
 #define IGNORE_MOD_TAP_INTERRUPT
-#define TAPPING_TERM 250
+#define TAPPING_TERM 180
 #define PERMISSIVE_HOLD
 
 #define USB_POLLING_INTERVAL_MS 2
